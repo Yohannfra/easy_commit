@@ -1,26 +1,36 @@
+use clap::Parser;
 use inquire::{Select, Text};
 use std::process;
 use std::process::Command;
 
 use std::io::{self, Write};
 
+mod commit_data;
 mod commit_type;
 
+use commit_data::CommitData;
 use commit_type::CommitType;
 
-#[derive(Debug)]
-struct CommitData {
-    commit_type: CommitType,
-    message: String,
-    scope: Option<String>,
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    // Skip hooks
+    #[arg(long, action)]
+    no_verify: bool,
+
+    // man git-commit --try-run (Don't actually create the commit)
+    #[arg(long, action)]
+    dry_run: bool,
 }
 
 fn main() {
-    let mut commit_data = CommitData {
-        commit_type: CommitType::Fix,
-        scope: None,
-        message: "".to_string(),
-    };
+    let args = Args::parse();
+    //println!("{:?}", args);
+    //process::exit(0);
+
+    let mut commit_data = CommitData::new();
+
+    commit_data.no_verify = args.no_verify;
 
     // Commit type
     commit_data.commit_type = match Select::new("Type:", CommitType::as_str_vec()).prompt() {
@@ -52,26 +62,22 @@ fn main() {
         }
     };
 
-    // println!("{:?}", commit_data);
-
-    let full_message = format!(
-        "{}{}: {}",
-        commit_data.commit_type.as_str(),
-        if Option::is_some(&commit_data.scope) {
-            format!("({})", commit_data.scope.unwrap())
-        } else {
-            "".to_string()
-        },
-        commit_data.message
-    );
-
-    // println!("{}", full_message);
+    println!("{}", commit_data.get_commit_command_as_str());
 
     let output = Command::new("git")
         .arg("commit")
-        //.arg("--dry-run")
+        .args(if args.dry_run {
+            vec!["--dry-run"]
+        } else {
+            vec![]
+        })
         .arg("-m")
-        .arg(full_message)
+        .arg(commit_data.create_full_message())
+        .args(if args.no_verify {
+            vec!["--no-verify"]
+        } else {
+            vec![]
+        })
         .output()
         .expect("Failed to execute commit");
 
