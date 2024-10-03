@@ -3,6 +3,10 @@ name = "easy-commit"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "ec"
+path = "src/main.rs"
+
 [dependencies]
 clap = { version = "4.5.19", features = ["derive"] }
 inquire = "0.7.5"
