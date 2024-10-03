@@ -2,6 +2,10 @@
 
 A simple cli tool to git-commit with the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format.
 
+## Example
+
+![example screenshot](.github/imgs/example_screenshot.png)
+
 ## Install
 
 1. Clone this repository
