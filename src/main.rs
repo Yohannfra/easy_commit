@@ -7,9 +7,11 @@ use std::io::{self, Write};
 
 mod commit_data;
 mod commit_type;
+mod error_handler;
 
 use commit_data::CommitData;
 use commit_type::CommitType;
+use error_handler::*;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -35,9 +37,10 @@ fn main() {
     // Commit type
     commit_data.commit_type = match Select::new("Type:", CommitType::as_str_vec()).prompt() {
         Ok(commit_type) => CommitType::new(commit_type),
-        Err(_) => {
-            panic!("An error happened when asking for your commit_type, try again later.");
-        }
+        Err(e) => handle_inquire_error(
+            e,
+            "An error happened when asking for your commit_type, try again later.",
+        ),
     };
 
     // Scope
@@ -49,17 +52,19 @@ fn main() {
                 Some(scope)
             }
         }
-        Err(_) => {
-            panic!("An error happened when asking for your commit_message, try again later.")
-        }
+        Err(e) => handle_inquire_error(
+            e,
+            "An error happened when asking for your commit_message, try again later.",
+        ),
     };
 
     // Message
     commit_data.message = match Text::new("Message:").prompt() {
         Ok(message) => message,
-        Err(_) => {
-            panic!("An error happened when asking for your commit_message, try again later.")
-        }
+        Err(e) => handle_inquire_error(
+            e,
+            "An error happened when asking for your commit_message, try again later.",
+        ),
     };
 
     println!("{}", commit_data.get_commit_command_as_str());
