@@ -52,7 +52,7 @@ fn main() {
         }
     };
 
-    println!("{:?}", commit_data);
+    // println!("{:?}", commit_data);
 
     let full_message = format!(
         "{}{}: {}",
@@ -65,7 +65,7 @@ fn main() {
         commit_data.message
     );
 
-    println!("{}", full_message);
+    // println!("{}", full_message);
 
     let output = Command::new("git")
         .arg("commit")
