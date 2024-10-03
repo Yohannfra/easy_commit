@@ -55,7 +55,7 @@ fn main() {
     println!("{:?}", commit_data);
 
     let full_message = format!(
-        "\"{}{}: {}\"",
+        "{}{}: {}",
         commit_data.commit_type.as_str(),
         if Option::is_some(&commit_data.scope) {
             format!("({})", commit_data.scope.unwrap())
