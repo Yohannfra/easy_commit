@@ -16,11 +16,11 @@ use error_handler::*;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    // Skip hooks
+    /// Skip hooks
     #[arg(long, action)]
     no_verify: bool,
 
-    // man git-commit --try-run (Don't actually create the commit)
+    /// man git-commit --try-run (Don't actually create the commit)
     #[arg(long, action)]
     dry_run: bool,
 }
