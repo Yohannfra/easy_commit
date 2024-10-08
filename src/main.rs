@@ -1,9 +1,7 @@
 use clap::Parser;
 use inquire::{Select, Text};
 use std::process;
-use std::process::Command;
-
-use std::io::{self, Write};
+use std::process::{Command, Stdio};
 
 mod commit_data;
 mod commit_type;
@@ -83,11 +81,10 @@ fn main() {
         } else {
             vec![]
         })
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
         .output()
         .expect("Failed to execute commit");
-
-    io::stdout().write_all(&output.stdout).unwrap();
-    io::stderr().write_all(&output.stderr).unwrap();
 
     process::exit(output.status.code().unwrap());
 }
