@@ -5,10 +5,12 @@ use std::process::{Command, Stdio};
 
 mod commit_data;
 mod commit_type;
+mod config;
 mod error_handler;
 
 use commit_data::CommitData;
 use commit_type::CommitType;
+use config::Config;
 use error_handler::*;
 
 #[derive(Parser, Debug)]
@@ -27,6 +29,10 @@ fn main() {
     let args = Args::parse();
     //println!("{:?}", args);
     //process::exit(0);
+
+    let config: Config = Config::new(std::path::PathBuf::from(".easy-commit.toml")).unwrap();
+
+    std::process::exit(0);
 
     let mut commit_data = CommitData::new();
 

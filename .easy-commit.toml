@@ -1,0 +1,3 @@
+[conf]
+scopes = ["guest", "staff", "web", "server"]
+types = ["feat", "fix", "docs", "web"]
